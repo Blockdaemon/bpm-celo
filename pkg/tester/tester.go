@@ -1,6 +1,12 @@
 package tester
 
-import "github.com/Blockdaemon/bpm-sdk/pkg/node"
+import (
+	"fmt"
+	"log"
+	"os"
+
+	"github.com/Blockdaemon/bpm-sdk/pkg/node"
+)
 
 // CeloTester Interface for running tests against node
 type CeloTester struct{}
@@ -27,5 +33,19 @@ func (t *testRunner) test(testFunc func() error) {
 }
 
 func runAllTests() error {
+
+	jsonfile := os.Args[2]
+
+	n, err := node.Load(jsonfile)
+	if err != nil {
+		log.Fatalf("Unable to load node json: %s\n", err)
+	}
+
+	containerName := "bpm-" + n.ID + "-" + n.StrParameters["subtype"]
+	fmt.Printf("testing container: %s\n", containerName)
+
+	// 1. use sdk docker/BasicManager to get docker client
+	// 2. docker exec container to get `eth.syncing` result.
+
 	return nil
 }
