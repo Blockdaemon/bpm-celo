@@ -1,7 +1,8 @@
 # Celo BPM Plugin
 
-![GitHub Logo](/assets/Celo-Logo-Color.svg)
-
+Celo             |  Blockdaemon
+:-------------------------:|:-------------------------:
+![](/assets/Celo-Logo-Color.svg)  |  ![](/assets/bd-logo.svg)
 
 This plugin is for the [Blockdaemon Protocol Manager](https://gitlab.com/Blockdaemon/bpm-cli).
 
