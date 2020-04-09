@@ -240,7 +240,7 @@ func (c *Celo) GetParameters() []plugin.Parameter {
 func (c *Celo) GetContainers() []docker.Container {
 
 	collectorContainerName := "collector"
-	collectorImage := "docker.io/blockdaemon/celo-collector:BD-2901-get-rewards"
+	collectorImage := "docker.io/blockdaemon/celo-collector:0.0.3"
 	collectorEnvFile := "configs/collector.env"
 
 	var containers []docker.Container
