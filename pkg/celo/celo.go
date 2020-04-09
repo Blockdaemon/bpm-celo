@@ -170,6 +170,13 @@ func (c *Celo) GetParameters() []plugin.Parameter {
 		Mandatory:   false,
 		Default:     "",
 	}
+	pCeloCommands := plugin.Parameter{
+		Name:        "celo",
+		Type:        plugin.ParameterTypeString,
+		Description: "Extra commands for container. Example: `--celo=\"--rpcapi web,personal,debug --rpcport 1234 --rpchost 0.0.0.0\"",
+		Mandatory:   false,
+		Default:     "",
+	}
 
 	switch subtype {
 
@@ -182,6 +189,7 @@ func (c *Celo) GetParameters() []plugin.Parameter {
 			pNetworkID,
 			pSigner,
 			pBootnodes,
+			pCeloCommands,
 		}
 	case "validator":
 		pNetworkID.Mandatory = true
@@ -201,6 +209,7 @@ func (c *Celo) GetParameters() []plugin.Parameter {
 			pProxyInternal,
 			pProxyExternal,
 			pEnode,
+			pCeloCommands,
 		}
 	case "fullnode":
 		params = []plugin.Parameter{
@@ -213,6 +222,7 @@ func (c *Celo) GetParameters() []plugin.Parameter {
 			pMaxpeers,
 			pAccount,
 			pPort,
+			pCeloCommands,
 		}
 	default: // show all params
 		params = []plugin.Parameter{
@@ -230,6 +240,7 @@ func (c *Celo) GetParameters() []plugin.Parameter {
 			pLightServe,
 			pMaxpeers,
 			pAccount,
+			pCeloCommands,
 		}
 	}
 
@@ -245,6 +256,7 @@ func (c *Celo) GetContainers() []docker.Container {
 
 	var containers []docker.Container
 	subtype := c.subtype
+	datadir := c.n.StrParameters["data-dir"]
 	n := c.n
 
 	cBootnodes := docker.Container{
@@ -255,7 +267,7 @@ func (c *Celo) GetContainers() []docker.Container {
 		Mounts: []docker.Mount{
 			{
 				Type: "bind",
-				From: "./data",
+				From: datadir,
 				To:   "/root/.celo",
 			},
 		},
@@ -268,7 +280,7 @@ func (c *Celo) GetContainers() []docker.Container {
 		Mounts: []docker.Mount{
 			{
 				Type: "bind",
-				From: "./data",
+				From: datadir,
 				To:   "/root/.celo",
 			},
 		},
@@ -307,7 +319,7 @@ func (c *Celo) GetContainers() []docker.Container {
 		Mounts: []docker.Mount{
 			{
 				Type: "bind",
-				From: "./data",
+				From: datadir,
 				To:   "/root/.celo",
 			},
 			{
@@ -339,7 +351,7 @@ func (c *Celo) GetContainers() []docker.Container {
 		Mounts: []docker.Mount{
 			{
 				Type: "bind",
-				From: "./data",
+				From: datadir,
 				To:   "/root/.celo",
 			},
 		},

@@ -2,8 +2,8 @@ package configs
 
 const (
 	// CollectorEnvTpl tempalte for collector command
-	CollectorEnvTpl = `SERVICE_PORT=9933
-SERVICE_HOST={{ .Node.NamePrefix }}proxy`
+	CollectorEnvTpl = `SERVICE_PORT=8545
+SERVICE_HOST={{ .Node.NamePrefix }}{{ .Node.StrParameters.subtype }}`
 
 	// ProxyCmdTpl the celo command for running proxies
 	ProxyCmdTpl = `--verbosity=3
@@ -14,7 +14,7 @@ SERVICE_HOST={{ .Node.NamePrefix }}proxy`
 --proxy.internalendpoint=:30503
 --etherbase={{ .Node.StrParameters.signer }}
 --bootnodes={{ .Node.StrParameters.bootnodes }}
---ethstats={{ .Node.ID }}-proxy@baklava-ethstats.celo-testnet.org
+{{ if index .Node.StrParameters.celo }}{{ .Node.StrParameters.celo }}{{ end }}
 `
 
 	// ValidatorCmdTpl the celo command for running validator
@@ -32,11 +32,11 @@ SERVICE_HOST={{ .Node.NamePrefix }}proxy`
 --unlock={{ .Node.StrParameters.signer }}
 --password=/root/.celo/configs/password.secret
 --keystore=/root/.celo/configs/keystore
---ethstats={{ .Node.ID }}@baklava-ethstats.celo-testnet.org
+{{ if index .Node.StrParameters.celo }}{{ .Node.StrParameters.celo }}{{ end }}
 `
 
 	// FullnodeCmdTpl the celo command for running fullnode
-	FullnodeCmdTpl = `--verbosity=2
+	FullnodeCmdTpl = `--verbosity=3
 --networkid={{ .Node.StrParameters.networkid }}
 --syncmode=full
 --rpc
@@ -45,8 +45,7 @@ SERVICE_HOST={{ .Node.NamePrefix }}proxy`
 --light.serve={{ .Node.StrParameters.light_serve }}
 --light.maxpeers={{ .Node.StrParameters.maxpeers }}
 --maxpeers=1100
---etherbase={{ .Node.StrParameters.account }}
 --bootnodes={{ .Node.StrParameters.bootnodes }}
---nousb
+{{ if index .Node.StrParameters.celo }}{{ .Node.StrParameters.celo }}{{ end }}
 `
 )
