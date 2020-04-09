@@ -246,7 +246,6 @@ func (c *Celo) GetContainers() []docker.Container {
 	var containers []docker.Container
 	subtype := c.subtype
 	n := c.n
-	volumeName := "celo-" + subtype
 
 	cBootnodes := docker.Container{
 		Name:    "celoinit",
@@ -255,8 +254,8 @@ func (c *Celo) GetContainers() []docker.Container {
 		Restart: "no",
 		Mounts: []docker.Mount{
 			{
-				Type: "volume",
-				From: volumeName,
+				Type: "bind",
+				From: "./data",
 				To:   "/root/.celo",
 			},
 		},
@@ -268,8 +267,8 @@ func (c *Celo) GetContainers() []docker.Container {
 		CmdFile: c.cmdFile,
 		Mounts: []docker.Mount{
 			{
-				Type: "volume",
-				From: volumeName,
+				Type: "bind",
+				From: "./data",
 				To:   "/root/.celo",
 			},
 		},
@@ -307,8 +306,8 @@ func (c *Celo) GetContainers() []docker.Container {
 		CmdFile: c.cmdFile,
 		Mounts: []docker.Mount{
 			{
-				Type: "volume",
-				From: volumeName,
+				Type: "bind",
+				From: "./data",
 				To:   "/root/.celo",
 			},
 			{
@@ -339,8 +338,8 @@ func (c *Celo) GetContainers() []docker.Container {
 		CmdFile: c.cmdFile,
 		Mounts: []docker.Mount{
 			{
-				Type: "volume",
-				From: volumeName,
+				Type: "bind",
+				From: "./data",
 				To:   "/root/.celo",
 			},
 		},
