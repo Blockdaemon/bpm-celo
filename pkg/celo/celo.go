@@ -74,7 +74,7 @@ func (c *Celo) GetParameters() []plugin.Parameter {
 	pSubtype := plugin.Parameter{
 		Name:        "subtype",
 		Type:        plugin.ParameterTypeString,
-		Description: "The type of node. Must be either `validator`, `proxy`, `fullnode`, `accounts` or `attestations`",
+		Description: "The type of node. Must be either `validator`, `proxy` or `fullnode`",
 		Mandatory:   false,
 		Default:     "fullnode",
 	}
@@ -154,14 +154,21 @@ func (c *Celo) GetParameters() []plugin.Parameter {
 		Type:        plugin.ParameterTypeString,
 		Description: "light.serve",
 		Mandatory:   false,
-		Default:     "10",
+		Default:     "90",
+	}
+	pLightMaxpeers := plugin.Parameter{
+		Name:        "light_maxpeers",
+		Type:        plugin.ParameterTypeString,
+		Description: "The max peers `light.maxpeers`",
+		Mandatory:   false,
+		Default:     "1000",
 	}
 	pMaxpeers := plugin.Parameter{
 		Name:        "maxpeers",
 		Type:        plugin.ParameterTypeString,
 		Description: "The max peers `light.maxpeers`",
 		Mandatory:   false,
-		Default:     "10",
+		Default:     "1100",
 	}
 	pAccount := plugin.Parameter{
 		Name:        "account",
@@ -212,6 +219,9 @@ func (c *Celo) GetParameters() []plugin.Parameter {
 			pCeloCommands,
 		}
 	case "fullnode":
+		pNetworkID.Mandatory = true
+		pBootnodes.Mandatory = true
+		pAccount.Mandatory = true
 		params = []plugin.Parameter{
 			pSubtype,
 			pNetworkID,
@@ -219,6 +229,7 @@ func (c *Celo) GetParameters() []plugin.Parameter {
 			pBootnodes,
 			pRpcaddr,
 			pLightServe,
+			pLightMaxpeers,
 			pMaxpeers,
 			pAccount,
 			pPort,
@@ -238,6 +249,7 @@ func (c *Celo) GetParameters() []plugin.Parameter {
 			pBootnodes,
 			pRpcaddr,
 			pLightServe,
+			pLightMaxpeers,
 			pMaxpeers,
 			pAccount,
 			pCeloCommands,
@@ -367,6 +379,11 @@ func (c *Celo) GetContainers() []docker.Container {
 				HostPort:      n.StrParameters["port"],
 				ContainerPort: n.StrParameters["port"],
 				Protocol:      "udp",
+			},
+			{
+				HostIP:        "0.0.0.0",
+				HostPort:      "8545",
+				ContainerPort: "8545",
 			},
 		},
 		CollectLogs: true,

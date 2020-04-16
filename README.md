@@ -2,7 +2,7 @@
 
 Celo             |  Blockdaemon
 :-------------------------:|:-------------------------:
-![](/assets/Celo-Logo-Color.svg)  |  ![](/assets/bd-logo.svg)
+![](/assets/celo-logo-200x200.png)  |  ![](/assets/bd-logo-200x200.png)
 
 This plugin is for the [Blockdaemon Protocol Manager](https://gitlab.com/Blockdaemon/bpm-cli).
 
