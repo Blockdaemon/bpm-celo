@@ -1,0 +1,9 @@
+bin/*
+configs/keystore/*
+!configs/keystore/.gitkeep
+configs/collector.env
+configs/password.secret
+
+.DS_Store
+celo.dockercmd
+*.json
