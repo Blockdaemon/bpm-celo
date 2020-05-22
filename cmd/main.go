@@ -1,20 +1,22 @@
 package main
 
 import (
-	"github.com/Blockdaemon/bpm-sdk/pkg/plugin"
+	"log"
+	"os"
+
 	"github.com/blockdaemon/bpm-celo/pkg/celo"
 	"github.com/blockdaemon/bpm-celo/pkg/tester"
+	"go.blockdaemon.com/bpm/sdk/pkg/plugin"
 )
 
 const (
-	celoContainerImage = "us.gcr.io/celo-testnet/celo-node:baklava"
-	description        = "A Celo BPM Plugin"
-	version            = "0.0.1"
+	description = "A Celo BPM Plugin"
+	version     = "0.0.1"
 )
 
 func main() {
 
-	c := celo.New(celoContainerImage)
+	c := celo.New()
 
 	parameters := c.GetParameters()
 	containers := c.GetContainers()
@@ -22,6 +24,14 @@ func main() {
 
 	celoPlugin := plugin.NewDockerPlugin("celo", version, description, parameters, templates, containers)
 	celoPlugin.Tester = tester.CeloTester{}
+
+	if c.Subtype != "attestation-service" {
+		cmd := os.Args[1]
+		if cmd == "start" {
+			log.Println("Initialize genesis...")
+			c.InitGenesis() // TODO handle erros, ffs (palmface)
+		}
+	}
 
 	plugin.Initialize(celoPlugin)
 }

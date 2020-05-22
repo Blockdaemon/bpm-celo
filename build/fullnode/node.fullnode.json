@@ -1,0 +1,28 @@
+{
+  "id": "celo-test",
+  "plugin": "celo",
+  "str_parameters": {
+    "bootnodes": "enode://5aaf10664b12431c250597e980aacd7d5373cae00f128be5b00364344bb96bce7555b50973664bddebd1cb7a6d3fb927bec81527f80e22a26fa373c375fcdefc@35.247.75.229:30301",
+    "network": "baklava",
+    "account": "0xaeb63edd5091320fd1f6e4f0bdb891bb94fb5b31",
+    "docker-network": "bpm",
+    "light_serve": "90",
+    "light_maxpeers": "1000",
+    "maxpeers": "1100",
+    "celo": "",
+    "rpcaddr": "0.0.0.0",
+    "rpcport": "8554",
+    "nousb": "true",
+    "networkid": "40120",
+    "port": "30304",
+    "subtype": "fullnode"
+  },
+  "bool_parameters": {},
+  "collection": {
+    "ca": "",
+    "cert": "",
+    "host": "",
+    "key": ""
+  },
+  "version": "0.0.1"
+}

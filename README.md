@@ -56,8 +56,8 @@ bpm nodes configure celo
 In order to run a validator you must run a proxy first. To run a proxy call:
 ```
 bpm nodes configure celo
+    --network mainnet
     --subtype=proxy
-    --networkid=40120
     --signer=0xf2334aae1b2f273b600abff9a491eb720d842b6d
     --bootnodes=enode://5aaf10664b12431c250597e980aacd7d5373cae00f128be5b00364344bb96bce7555b50973664bddebd1cb7a6d3fb927bec81527f80e22a26fa373c375fcdefc@35.247.75.229:30301
 ```
@@ -84,7 +84,7 @@ Next we can configure our validator:
 ```
 bpm nodes configure celo
     --subtype=validator
-    --networkid=40120
+    --network baklava
     --signer=0xf2334aae1b2f273b600abff9a491eb720d842b6d
     --port=30303
     --proxy_internal=<proxy internal ip, if none then use external ip from previous command>
@@ -104,7 +104,27 @@ with the interweb.
 
 A fullnode can be run using the following:
 ```
-bpm --debug nodes configure celo --subtype=fullnode --networkid=40120 --account=0xf2334aae1b2f273b600abff9a491eb720d842b6d --port=30314 --bootnodes=enode://5aaf10664b12431c250597e980aacd7d5373cae00f128be5b00364344bb96bce7555b50973664bddebd1cb7a6d3fb927bec81527f80e22a26fa373c375fcdefc@34.82.45.71:30301
+bpm --debug nodes configure celo --network mainnet --subtype=fullnode --networkid=40120 --account=0xf2334aae1b2f273b600abff9a491eb720d842b6d --port=30314 --bootnodes=enode://5aaf10664b12431c250597e980aacd7d5373cae00f128be5b00364344bb96bce7555b50973664bddebd1cb7a6d3fb927bec81527f80e22a26fa373c375fcdefc@34.82.45.71:30301
+```
+
+### Attestation Node
+
+Please note  that `--allow-insecure-unlock` is required for the `attesation-service`
+to make requests against the node. Please check that the vm this node runs on is
+secure.
+
+From the cli:
+```
+bpm --debug nodes configure celo --network mainnet --subtype attestation-node --signer 0x6e1a3ec5c38d006244eb2113547e26f69bd1a5d2 --keystore-file build/keystore/UTC--2020-05-08T16-59-49.101532000Z--6e1a3ec5c38d006244eb2113547e26f69bd1a5d2 --keystore-pass build/keystore/6e1a3ec5c38d006244eb2113547e26f69bd1a5d2.password.secret --bootnodes enode://5aaf10664b12431c250597e980aacd7d5373cae00f128be5b00364344bb96bce7555b50973664bddebd1cb7a6d3fb927bec81527f80e22a26fa373c375fcdefc@35.247.75.229:30301
+```
+
+### Attestation Service
+
+Note, requires the attestation node to be running and synced.
+From the bpm-cli:
+( replace `$NODE_URL` to the  node created above. eg: `http://bpm-cold-cherry-5049:8545`)
+```
+bpm --debug nodes configure celo --network mainnet --subtype attestation-service --signer 0x6e1a3ec5c38d006244eb2113547e26f69bd1a5d2 --validator 0xf2334aae1b2f273b600abff9a491eb720d842b6d --db_user  postgres --db_password foobar --twilio_service_sid foobar --twilio_account_sid foobar --twilio_blacklist foobar --twilio_auth_token 1234 --port 8080 --node_url $NODE_URL
 ```
 
 ## Development
@@ -138,7 +158,7 @@ are calling from within the plugin. So we need to create a `node.json` file:
   "str_parameters": {
     "docker-network": "bpm",
     "subtype": "validator",
-    "networkid": "40120",
+    "network": "mainnet",
     "signer": "0xc1c048DE906CE7e3F99c1feC0651671ec91970F9",
     "proxy_internal": "0.0.0.0",
     "proxy_external": "1.1.1.1",

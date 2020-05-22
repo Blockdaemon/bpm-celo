@@ -15,7 +15,6 @@ SERVICE_HOST=bpm-{{ .Node.ID }}-{{ .Node.StrParameters.subtype }}`
 --rpcvhosts=bpm-{{ .Node.ID }}-{{ .Node.StrParameters.subtype }}
 --etherbase={{ .Node.StrParameters.signer }}
 --bootnodes={{ .Node.StrParameters.bootnodes }}
-{{ if index .Node.StrParameters.celo }}{{ .Node.StrParameters.celo }}{{ end }}
 `
 
 	// ValidatorCmdTpl the celo command for running validator
@@ -32,9 +31,8 @@ SERVICE_HOST=bpm-{{ .Node.ID }}-{{ .Node.StrParameters.subtype }}`
 --proxy.proxyenodeurlpair=enode://{{ .Node.StrParameters.enode }}@{{ .Node.StrParameters.proxy_internal }}:30503;enode://{{ .Node.StrParameters.enode }}@{{ .Node.StrParameters.proxy_external }}:30303
 --unlock={{ .Node.StrParameters.signer }}
 --rpcvhosts=bpm-{{ .Node.ID }}-{{ .Node.StrParameters.subtype }}
---password=/root/.celo/configs/password.secret
+--password=/root/.celo/configs/.password.secret
 --keystore=/root/.celo/configs/keystore
-{{ if index .Node.StrParameters.celo }}{{ .Node.StrParameters.celo }}{{ end }}
 `
 
 	// FullnodeCmdTpl the celo command for running fullnode
@@ -50,6 +48,24 @@ SERVICE_HOST=bpm-{{ .Node.ID }}-{{ .Node.StrParameters.subtype }}`
 --rpcvhosts=bpm-{{ .Node.ID }}-{{ .Node.StrParameters.subtype }}
 --etherbase={{ .Node.StrParameters.account }}
 --bootnodes={{ .Node.StrParameters.bootnodes }}
-{{ if index .Node.StrParameters.celo }}{{ .Node.StrParameters.celo }}{{ end }}
+{{ if eq .Node.StrParameters.nousb "true" "TRUE" "True" }}--nousb{{ end }}
 `
+
+	// AttestationCmdTpl the celo command for running attestation node
+	AttestationCmdTpl = `--verbosity=3
+--networkid={{ .Node.StrParameters.networkid }}
+--syncmode=full
+--rpc
+--rpcvhosts=bpm-{{ .Node.ID }}-{{ .Node.StrParameters.subtype }}
+--rpcaddr={{ .Node.StrParameters.rpcaddr }}
+--rpcapi=eth,net,web3,debug,admin,personal
+--allow-insecure-unlock
+--unlock={{ .Node.StrParameters.signer }}
+--keystore=/root/.celo/configs/keystore
+--password=/root/.celo/configs/.password.secret
+--bootnodes={{ .Node.StrParameters.bootnodes }}
+`
+
+	// AttestationServiceCmdTpl the celo command for running attestation service
+	AttestationServiceCmdTpl = ``
 )

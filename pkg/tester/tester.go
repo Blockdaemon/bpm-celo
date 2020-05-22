@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/Blockdaemon/bpm-sdk/pkg/node"
+	"go.blockdaemon.com/bpm/sdk/pkg/node"
 )
 
 // CeloTester Interface for running tests against node
@@ -32,6 +32,12 @@ func (t *testRunner) test(testFunc func() error) {
 	}
 }
 
+/**
+* Two options:
+ - cmd.Exec(bpm nodes ... node.json)
+ - decouple logic from main and call that (more professinoal)
+* @type {[type]}
+*/
 func runAllTests() error {
 
 	jsonfile := os.Args[2]
