@@ -1,0 +1,29 @@
+project_name: bpm-celo
+before:
+  hooks:
+    - go mod download # Download once at the start because goreleaser builds in parallel (https://goreleaser.com/customization/)
+builds:
+- main: ./cmd
+  ldflags:
+    - -X main.version={{.Version}}
+  env:
+    - CGO_ENABLED=0
+  goos:
+    - darwin
+    - linux
+  goarch:
+    - amd64
+  binary: celo
+signs:
+  - artifacts: all
+    args: ["-u", "support@blockdaemon.com", "--output", "${signature}", "--detach-sign", "${artifact}"]
+changelog:
+  sort: asc
+  filters:
+    exclude:
+    - '^docs:'
+    - '^test:'
+release:
+  gitlab:
+    owner: blockdaemon
+    name: bpm-celo
