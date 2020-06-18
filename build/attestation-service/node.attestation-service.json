@@ -1,0 +1,24 @@
+{
+  "id": "celo-test",
+  "plugin": "celo",
+  "str_parameters": {
+    "network": "baklava",
+    "networkid": "40120",
+    "nousb": "true",
+    "celo": "",
+    "docker-network": "bpm",
+    "subtype": "attestation-service",
+    "signer": "0xe18ea8778e097cc346862925b78cfe1d89699678",
+    "validator": "0xaeb63edd5091320fd1f6e4f0bdb891bb94fb5b31",
+    "node_url": "http://bpm-celo-test-attestation-node:8545",
+    "database": "postgres://bpm-celo-attestation-postgres:5432",
+    "db_user": "foobar",
+    "db_password": "bizbaz",
+    "twilio_service_sid": "1234",
+		"twilio_account_sid": "1234",
+		"twilio_blacklist": "",
+		"twilio_auth-token": "1234",
+    "port": "80"
+  },
+  "version": "1.0.0"
+}
