@@ -1,0 +1,15 @@
+stages:
+  - check
+  - build
+
+check:
+  image: golangci/golangci-lint:v1.27
+  stage: check
+  script:
+    - make check
+
+build:
+  image: golang:1.14
+  stage: build
+  script:
+    - make build
