@@ -29,7 +29,7 @@ func main() {
 		cmd := os.Args[1]
 		if cmd == "start" {
 			log.Println("Initialize genesis...")
-			c.InitGenesis() // TODO handle erros, ffs (palmface)
+			_, _ = c.InitGenesis() // TODO handle erros, ffs (palmface)
 		}
 	}
 

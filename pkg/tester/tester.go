@@ -3,15 +3,15 @@ package tester
 import (
 	"bytes"
 	"context"
-    "errors"
-    "strconv"
+	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
-    "strings"
-    "time"
-    "net/http"
-    "math/rand"
-    "encoding/json"
+	"math/rand"
+	"net/http"
+	"strconv"
+	"strings"
+	"time"
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
@@ -23,7 +23,6 @@ import (
 // CeloTester Interface for running tests against node
 type CeloTester struct {
 	Cli *client.Client
-    n node.Node
 }
 
 func New() *CeloTester {
@@ -36,16 +35,16 @@ func New() *CeloTester {
 func (d CeloTester) Test(currentNode node.Node) (bool, error) {
 
 	results, err := runAllTests(currentNode)
-    if err != nil {
+	if err != nil {
 		return false, err
 	}
 
-    for i:=0; i<len(results.Tests); i++{
-        fmt.Printf("    Test [%s]   => %s\n", results.Tests[i].name, string(results.Tests[i].result))
-    }
+	for i := 0; i < len(results.Tests); i++ {
+		fmt.Printf("    Test [%s]   => %s\n", results.Tests[i].name, string(results.Tests[i].result))
+	}
 
-    fmt.Printf("Total failed tests: %s\n", strconv.Itoa(results.failed))
-    fmt.Printf("Total passed tests: %s\n", strconv.Itoa(results.succeeded))
+	fmt.Printf("Total failed tests: %s\n", strconv.Itoa(results.failed))
+	fmt.Printf("Total passed tests: %s\n", strconv.Itoa(results.succeeded))
 
 	return true, nil
 }
@@ -53,35 +52,34 @@ func (d CeloTester) Test(currentNode node.Node) (bool, error) {
 type testRunner struct {
 	failed    int
 	succeeded int
-    bm *docker.BasicManager
-    Tests []testRunnerTest
+	Tests     []testRunnerTest
 }
 type testRunnerTest struct {
-    name string
-    result string
+	name   string
+	result string
 }
 
-func (t *testRunner) test(testFunc func() (title string, result string, err error)) error{
+func (t *testRunner) test(testFunc func() (title string, result string, err error)) error {
 
-    var err error
-    testRes := testRunnerTest{}
+	var err error
+	testRes := testRunnerTest{}
 
-    title, result, err := testFunc()
-    if err!=nil {
-        t.failed++
-    } else {
-        t.succeeded++
-    }
-    testRes.name = title
-    testRes.result = result
-    t.Tests = append(t.Tests, testRes)
+	title, result, err := testFunc()
+	if err != nil {
+		t.failed++
+	} else {
+		t.succeeded++
+	}
+	testRes.name = title
+	testRes.result = result
+	t.Tests = append(t.Tests, testRes)
 
-    return err
+	return err
 }
 
 func runAllTests(currentNode node.Node) (testRunner, error) {
 
-    tr := testRunner{}
+	tr := testRunner{}
 
 	containerName := "bpm-" + currentNode.ID + "-" + currentNode.StrParameters["subtype"]
 	fmt.Printf("testing container: %s\n", containerName)
@@ -91,54 +89,60 @@ func runAllTests(currentNode node.Node) (testRunner, error) {
 		return tr, err
 	}
 
-    var testCase func() (string, string, error)
+	var testCase func() (string, string, error)
 
 	// test is running
-    testCase = func()(string, string, error){
-        title := "Container is running"
-        res, err := testIsRunning(bm, containerName)
-        if err!= nil { return title, "false", err }
-        return title, string(res), nil
+	testCase = func() (string, string, error) {
+		title := "Container is running"
+		res, err := testIsRunning(bm, containerName)
+		if err != nil {
+			return title, "false", err
+		}
+		return title, string(res), nil
 
-    }
-    if err := tr.test(testCase); err!=nil {
-        return tr, err
-    }
+	}
+	if err := tr.test(testCase); err != nil {
+		return tr, err
+	}
 
 	// test peer count
-    testCase = func()(string, string, error){
-        title := "Peer Count"
-        res, err := testPeerCount(bm, containerName)
-        if err!= nil { return title, "false", err }
-        return title, string(res), nil
+	testCase = func() (string, string, error) {
+		title := "Peer Count"
+		res, err := testPeerCount(bm, containerName)
+		if err != nil {
+			return title, "false", err
+		}
+		return title, string(res), nil
 
-    }
-    if err := tr.test(testCase); err!=nil {
-        return tr, err
-    }
+	}
+	if err := tr.test(testCase); err != nil {
+		return tr, err
+	}
 
-    // test rpc, if no error then RPC is working.
-    testCase = func()(string, string, error){
-        title := "JSON RPC"
+	// test rpc, if no error then RPC is working.
+	testCase = func() (string, string, error) {
+		title := "JSON RPC"
 
-        if currentNode.StrParameters["subtype"] == "validator" {
-            return title, "false", nil
-        }
+		if currentNode.StrParameters["subtype"] == "validator" {
+			return title, "false", nil
+		}
 
-        rpcEndpoint, err := getContainerEndpoint("/"+containerName)
-        if err != nil {
-            return title, "false", err
-        }
-        fmt.Printf("RPC call to %s at %s\n", containerName, rpcEndpoint)
+		rpcEndpoint, err := getContainerEndpoint("/" + containerName)
+		if err != nil {
+			return title, "false", err
+		}
+		fmt.Printf("RPC call to %s at %s\n", containerName, rpcEndpoint)
 
-        _, _, _, err = rpcPost("eth_syncing", "", rpcEndpoint)
-        if err!= nil { return title, "false", err }
+		_, _, _, err = rpcPost("eth_syncing", "", rpcEndpoint)
+		if err != nil {
+			return title, "false", err
+		}
 
-        return title, "true", nil
-    }
-    if err := tr.test(testCase); err!=nil {
-        return tr, err
-    }
+		return title, "true", nil
+	}
+	if err := tr.test(testCase); err != nil {
+		return tr, err
+	}
 
 	return tr, nil
 }
@@ -148,7 +152,7 @@ func testIsRunning(bm *docker.BasicManager, containerName string) (string, error
 	ctx := context.Background()
 	running, err := bm.IsContainerRunning(ctx, containerName)
 	if err != nil {
-        return "", err
+		return "", err
 	}
 
 	return strconv.FormatBool(running), nil
@@ -157,12 +161,12 @@ func testIsRunning(bm *docker.BasicManager, containerName string) (string, error
 func testPeerCount(bm *docker.BasicManager, containerName string) (string, error) {
 
 	ctx := context.Background()
-    cmdPeerCount := []string{
-        "geth",
+	cmdPeerCount := []string{
+		"geth",
 		"--exec",
-        "net.peerCount",
-        "attach",
-    }
+		"net.peerCount",
+		"attach",
+	}
 	id, _ := Exec(ctx, containerName, cmdPeerCount)
 	res, _ := InspectExecResp(ctx, id.ID)
 
@@ -244,13 +248,13 @@ func InspectExecResp(ctx context.Context, id string) (ExecResult, error) {
 	execResult.StdOut = string(stdout)
 	execResult.StdErr = string(stderr)
 
-    return execResult, nil
+	return execResult, nil
 }
 
 func rpcPost(method string, params string, baseUrl string) (int, int, map[string]interface{}, error) {
 	rand.Seed(time.Now().UnixNano())
 	var messageID = rand.Int()
-    var data map[string]interface{}
+	var data map[string]interface{}
 
 	requestBody, err := json.Marshal(map[string]interface{}{
 		"method":  method,
@@ -263,41 +267,41 @@ func rpcPost(method string, params string, baseUrl string) (int, int, map[string
 
 	resp, err := http.Post(baseUrl+params, "application/json", bytes.NewBuffer(requestBody))
 	if err != nil {
-        return int(500), messageID, data, err
+		return int(500), messageID, data, err
 	}
 	defer resp.Body.Close()
 
 	err = json.NewDecoder(resp.Body).Decode(&data)
 	if err != nil {
-        return int(500), messageID, data, err
+		return int(500), messageID, data, err
 	}
 
 	return resp.StatusCode, messageID, data, err
 }
 
-func getContainerEndpoint(name string) (string, error){
+func getContainerEndpoint(name string) (string, error) {
 
-    cli, err := client.NewEnvClient()
+	cli, err := client.NewEnvClient()
 	if err != nil {
 		return "", err
 	}
 
-    host := ""
-    hostPort := ""
-    containerJSON, _ := cli.ContainerInspect(context.Background(), name)
-    if err != nil {
+	host := ""
+	hostPort := ""
+	containerJSON, _ := cli.ContainerInspect(context.Background(), name)
+	if err != nil {
 		return "", err
 	}
 
-    if len(containerJSON.NetworkSettings.NetworkSettingsBase.Ports["8545/tcp"])==0 {
-        hostPort = "8545"
-        host = strings.Replace(name, "/", "", -1)
-    } else if len(containerJSON.NetworkSettings.NetworkSettingsBase.Ports["8545/tcp"]) > 0{
-        hostPort = containerJSON.NetworkSettings.NetworkSettingsBase.Ports["8545/tcp"][0].HostPort
-        host = containerJSON.NetworkSettings.NetworkSettingsBase.Ports["8545/tcp"][0].HostIP
-    } else{
-        return "", errors.New("No rpc port set")
-    }
+	if len(containerJSON.NetworkSettings.NetworkSettingsBase.Ports["8545/tcp"]) == 0 {
+		hostPort = "8545"
+		host = strings.Replace(name, "/", "", -1)
+	} else if len(containerJSON.NetworkSettings.NetworkSettingsBase.Ports["8545/tcp"]) > 0 {
+		hostPort = containerJSON.NetworkSettings.NetworkSettingsBase.Ports["8545/tcp"][0].HostPort
+		host = containerJSON.NetworkSettings.NetworkSettingsBase.Ports["8545/tcp"][0].HostIP
+	} else {
+		return "", errors.New("No rpc port set")
+	}
 
-    return "http://"+host+":"+hostPort, nil
+	return "http://" + host + ":" + hostPort, nil
 }

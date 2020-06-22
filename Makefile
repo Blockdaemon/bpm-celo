@@ -20,7 +20,7 @@ lint:
 pre-release:
 	@ test -n "$(VERSION)" || (echo 'ERROR: version is not set. Call like this: make version=1.14.0-rc1 release'; exit 1)
 
-	@ test -n "$(GITLAB_TOKEN)" || (echo 'ERROR: GITLAB_TOKEN is not set. See: https://goreleaser.com/quick-start/'; exit 1)
+	@ test -n "$(GITHUB_TOKEN)" || (echo 'ERROR: GITLAB_TOKEN is not set. See: https://goreleaser.com/quick-start/'; exit 1)
 
 	@ test -z "$$(git status --porcelain)" || (echo "ERROR: git is dirty - clean up first"; exit 1)
 

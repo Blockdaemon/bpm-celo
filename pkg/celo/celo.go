@@ -687,7 +687,7 @@ func (c *Celo) InitGenesis() (bool, error) {
 func (c *Celo) getDockerCmd() string {
 	subtype := c.Subtype
 
-	dockerCmd := ``
+	dockerCmd := ""
 	switch subtype {
 	case "proxy":
 		dockerCmd = configs.ProxyCmdTpl
