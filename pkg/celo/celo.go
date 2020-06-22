@@ -1,23 +1,12 @@
 package celo
 
 import (
-<<<<<<< HEAD
-=======
 	"context"
->>>>>>> release-0.0.2
 	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
-<<<<<<< HEAD
-	"strings"
-
-	"github.com/Blockdaemon/bpm-sdk/pkg/docker"
-	"github.com/Blockdaemon/bpm-sdk/pkg/node"
-	"github.com/Blockdaemon/bpm-sdk/pkg/plugin"
-	"github.com/blockdaemon/bpm-celo/configs"
-=======
 	"regexp"
 	"strings"
 
@@ -25,24 +14,16 @@ import (
 	"go.blockdaemon.com/bpm/sdk/pkg/docker"
 	"go.blockdaemon.com/bpm/sdk/pkg/node"
 	"go.blockdaemon.com/bpm/sdk/pkg/plugin"
->>>>>>> release-0.0.2
 )
 
 // Celo the main struct for this package
 type Celo struct {
-<<<<<<< HEAD
-	image   string
-	cmdFile string
-	n       node.Node
-	subtype string
-=======
 	image            string
 	imageAttestation string
 	networkID        string
 	cmdFile          string
 	n                node.Node
 	Subtype          string
->>>>>>> release-0.0.2
 }
 
 // ICelo The Celo interface
@@ -52,17 +33,6 @@ type ICelo interface {
 }
 
 // New Returns a new Celo instance
-<<<<<<< HEAD
-func New(image string) *Celo {
-	var c Celo
-
-	n := getNode()
-
-	c.cmdFile = "celo.dockercmd"
-	c.image = image
-	c.n = n
-	c.subtype = n.StrParameters["subtype"]
-=======
 func New() *Celo {
 	var c Celo
 
@@ -82,46 +52,15 @@ func New() *Celo {
 	c.cmdFile = "celo.dockercmd"
 	c.n = n
 	c.Subtype = n.StrParameters["subtype"]
->>>>>>> release-0.0.2
 
 	return &c
 }
 
-<<<<<<< HEAD
-func getNode() node.Node {
-	// load node.json
-	var jsonfile string
-	var n node.Node
-	var err error
-
-	for _, arg := range os.Args {
-		if strings.Contains(arg, ".json") {
-			jsonfile = arg
-		}
-	}
-	if os.Args[1] != "meta" {
-		n, err = node.Load(jsonfile)
-		if err != nil {
-			log.Fatalf("Unable to load node json: %s\n", err)
-		}
-	} else {
-		n = node.New(jsonfile)
-	}
-
-	return n
-}
-
-=======
->>>>>>> release-0.0.2
 // GetParameters returns parameters for a subtype, defaults to all
 func (c *Celo) GetParameters() []plugin.Parameter {
 
 	var params []plugin.Parameter
-<<<<<<< HEAD
-	subtype := c.subtype
-=======
 	subtype := c.Subtype
->>>>>>> release-0.0.2
 
 	pSubtype := plugin.Parameter{
 		Name:        "subtype",
@@ -130,8 +69,6 @@ func (c *Celo) GetParameters() []plugin.Parameter {
 		Mandatory:   false,
 		Default:     "fullnode",
 	}
-<<<<<<< HEAD
-=======
 	pNetwork := plugin.Parameter{
 		Name:        "network",
 		Type:        plugin.ParameterTypeString,
@@ -139,18 +76,12 @@ func (c *Celo) GetParameters() []plugin.Parameter {
 		Mandatory:   true,
 		Default:     "baklava",
 	}
->>>>>>> release-0.0.2
 	pNetworkID := plugin.Parameter{
 		Name:        "networkid",
 		Type:        plugin.ParameterTypeString,
 		Description: "The current Celo network id",
-<<<<<<< HEAD
-		Mandatory:   false,
-		Default:     "",
-=======
 		Mandatory:   true,
 		Default:     c.networkID,
->>>>>>> release-0.0.2
 	}
 	pSigner := plugin.Parameter{
 		Name:        "signer",
@@ -159,8 +90,6 @@ func (c *Celo) GetParameters() []plugin.Parameter {
 		Mandatory:   false,
 		Default:     "",
 	}
-<<<<<<< HEAD
-=======
 	pNoUSB := plugin.Parameter{
 		Name:        "nousb",
 		Type:        plugin.ParameterTypeString,
@@ -175,7 +104,6 @@ func (c *Celo) GetParameters() []plugin.Parameter {
 		Mandatory:   false,
 		Default:     "",
 	}
->>>>>>> release-0.0.2
 	pBootnodes := plugin.Parameter{
 		Name:        "bootnodes",
 		Type:        plugin.ParameterTypeString,
@@ -183,10 +111,6 @@ func (c *Celo) GetParameters() []plugin.Parameter {
 		Mandatory:   false,
 		Default:     "",
 	}
-<<<<<<< HEAD
-
-=======
->>>>>>> release-0.0.2
 	pKeystore := plugin.Parameter{
 		Name:        "keystore-file",
 		Type:        plugin.ParameterTypeString,
@@ -236,8 +160,6 @@ func (c *Celo) GetParameters() []plugin.Parameter {
 		Mandatory:   false,
 		Default:     "0.0.0.0",
 	}
-<<<<<<< HEAD
-=======
 	pRPCPort := plugin.Parameter{
 		Name:        "rpcport",
 		Type:        plugin.ParameterTypeString,
@@ -245,7 +167,6 @@ func (c *Celo) GetParameters() []plugin.Parameter {
 		Mandatory:   false,
 		Default:     "8545",
 	}
->>>>>>> release-0.0.2
 	pLightServe := plugin.Parameter{
 		Name:        "light_serve",
 		Type:        plugin.ParameterTypeString,
@@ -274,12 +195,6 @@ func (c *Celo) GetParameters() []plugin.Parameter {
 		Mandatory:   false,
 		Default:     "",
 	}
-<<<<<<< HEAD
-	pCeloCommands := plugin.Parameter{
-		Name:        "celo",
-		Type:        plugin.ParameterTypeString,
-		Description: "Extra commands for container. Example: `--celo=\"--rpcapi web,personal,debug --rpcport 1234 --rpchost 0.0.0.0\"",
-=======
 	// pCeloCommands := plugin.Parameter{
 	// 	Name:        "celo",
 	// 	Type:        plugin.ParameterTypeString,
@@ -340,7 +255,6 @@ func (c *Celo) GetParameters() []plugin.Parameter {
 		Name:        "twilio_auth_token",
 		Type:        plugin.ParameterTypeString,
 		Description: "Auth token for Twilio",
->>>>>>> release-0.0.2
 		Mandatory:   false,
 		Default:     "",
 	}
@@ -348,31 +262,17 @@ func (c *Celo) GetParameters() []plugin.Parameter {
 	switch subtype {
 
 	case "proxy":
-<<<<<<< HEAD
-		pNetworkID.Mandatory = true
-		pSigner.Mandatory = true
-		pBootnodes.Mandatory = true
-		params = []plugin.Parameter{
-=======
 		pSigner.Mandatory = true
 		pBootnodes.Mandatory = true
 		params = []plugin.Parameter{
 			pNetwork,
->>>>>>> release-0.0.2
 			pSubtype,
 			pNetworkID,
 			pSigner,
 			pBootnodes,
-<<<<<<< HEAD
-			pCeloCommands,
-		}
-	case "validator":
-		pNetworkID.Mandatory = true
-=======
 			// pCeloCommands,
 		}
 	case "validator":
->>>>>>> release-0.0.2
 		pSigner.Mandatory = true
 		pKeystore.Mandatory = true
 		pKeypass.Mandatory = true
@@ -380,10 +280,7 @@ func (c *Celo) GetParameters() []plugin.Parameter {
 		pProxyExternal.Mandatory = true
 		pEnode.Mandatory = true
 		params = []plugin.Parameter{
-<<<<<<< HEAD
-=======
 			pNetwork,
->>>>>>> release-0.0.2
 			pSubtype,
 			pNetworkID,
 			pSigner,
@@ -393,15 +290,6 @@ func (c *Celo) GetParameters() []plugin.Parameter {
 			pProxyInternal,
 			pProxyExternal,
 			pEnode,
-<<<<<<< HEAD
-			pCeloCommands,
-		}
-	case "fullnode":
-		pNetworkID.Mandatory = true
-		pBootnodes.Mandatory = true
-		pAccount.Mandatory = true
-		params = []plugin.Parameter{
-=======
 			// pCeloCommands,
 		}
 	case "fullnode":
@@ -409,28 +297,17 @@ func (c *Celo) GetParameters() []plugin.Parameter {
 		pAccount.Mandatory = true
 		params = []plugin.Parameter{
 			pNetwork,
->>>>>>> release-0.0.2
 			pSubtype,
 			pNetworkID,
 			pPort,
 			pBootnodes,
 			pRpcaddr,
-<<<<<<< HEAD
-=======
 			pRPCPort,
->>>>>>> release-0.0.2
 			pLightServe,
 			pLightMaxpeers,
 			pMaxpeers,
 			pAccount,
 			pPort,
-<<<<<<< HEAD
-			pCeloCommands,
-		}
-	default: // show all params
-		params = []plugin.Parameter{
-			pSubtype,
-=======
 			// pCeloCommands,
 			pNoUSB,
 		}
@@ -483,7 +360,6 @@ func (c *Celo) GetParameters() []plugin.Parameter {
 		params = []plugin.Parameter{
 			pSubtype,
 			pNetwork,
->>>>>>> release-0.0.2
 			pNetworkID,
 			pSigner,
 			pKeystore,
@@ -494,21 +370,12 @@ func (c *Celo) GetParameters() []plugin.Parameter {
 			pEnode,
 			pBootnodes,
 			pRpcaddr,
-<<<<<<< HEAD
-=======
 			pRPCPort,
 			pNoUSB,
->>>>>>> release-0.0.2
 			pLightServe,
 			pLightMaxpeers,
 			pMaxpeers,
 			pAccount,
-<<<<<<< HEAD
-			pCeloCommands,
-		}
-	}
-
-=======
 			// pCeloCommands,
 			pValidator,
 			pDBHost,
@@ -530,7 +397,6 @@ func (c *Celo) GetParameters() []plugin.Parameter {
 	// }
 	// fmt.Printf("celocmd: %v\n", c.n.StrParameters["celo"])
 
->>>>>>> release-0.0.2
 	return params
 }
 
@@ -538,30 +404,6 @@ func (c *Celo) GetParameters() []plugin.Parameter {
 func (c *Celo) GetContainers() []docker.Container {
 
 	collectorContainerName := "collector"
-<<<<<<< HEAD
-	collectorImage := "docker.io/blockdaemon/celo-collector:0.0.3"
-	collectorEnvFile := "configs/collector.env"
-
-	var containers []docker.Container
-	subtype := c.subtype
-	datadir := c.n.StrParameters["data-dir"]
-	n := c.n
-
-	cBootnodes := docker.Container{
-		Name:    "celoinit",
-		Image:   c.image,
-		Cmd:     []string{"--nousb", "init", "/celo/genesis.json"},
-		Restart: "no",
-		Mounts: []docker.Mount{
-			{
-				Type: "bind",
-				From: datadir,
-				To:   "/root/.celo",
-			},
-		},
-		CollectLogs: false,
-	}
-=======
 	collectorImage := "docker.io/blockdaemon/celo-collector:0.0.5"
 	collectorEnvFile := "configs/collector.env"
 	postgresEnvFile := "configs/postgres.env"
@@ -571,7 +413,6 @@ func (c *Celo) GetContainers() []docker.Container {
 	datadir := c.n.StrParameters["data-dir"]
 	n := c.n
 
->>>>>>> release-0.0.2
 	cProxy := docker.Container{
 		Name:    "proxy",
 		Image:   c.image,
@@ -658,25 +499,12 @@ func (c *Celo) GetContainers() []docker.Container {
 			{
 				HostIP:        "0.0.0.0",
 				HostPort:      n.StrParameters["port"],
-<<<<<<< HEAD
-				ContainerPort: n.StrParameters["port"],
-=======
 				ContainerPort: "30303",
->>>>>>> release-0.0.2
 				Protocol:      "tcp",
 			},
 			{
 				HostIP:        "0.0.0.0",
 				HostPort:      n.StrParameters["port"],
-<<<<<<< HEAD
-				ContainerPort: n.StrParameters["port"],
-				Protocol:      "udp",
-			},
-			{
-				HostIP:        "0.0.0.0",
-				HostPort:      "8545",
-				ContainerPort: "8545",
-=======
 				ContainerPort: "30303",
 				Protocol:      "udp",
 			},
@@ -711,13 +539,10 @@ func (c *Celo) GetContainers() []docker.Container {
 				Type: "bind",
 				From: "./configs",
 				To:   "/root/.celo/configs",
->>>>>>> release-0.0.2
 			},
 		},
 		CollectLogs: true,
 	}
-<<<<<<< HEAD
-=======
 	cAttestationService := docker.Container{
 		Name:    "attestation-service",
 		Image:   c.imageAttestation,
@@ -733,7 +558,6 @@ func (c *Celo) GetContainers() []docker.Container {
 		CollectLogs: false,
 		EnvFilename: "configs/attestation-service.env",
 	}
->>>>>>> release-0.0.2
 	cNodestate := docker.Container{
 		Name:        collectorContainerName,
 		Image:       collectorImage,
@@ -747,46 +571,26 @@ func (c *Celo) GetContainers() []docker.Container {
 		},
 		CollectLogs: true,
 	}
-<<<<<<< HEAD
-=======
 	cPostgres := docker.Container{
 		Name:        "attestation-postgres",
 		Image:       "docker.io/library/postgres:13",
 		EnvFilename: postgresEnvFile,
 		CollectLogs: false,
 	}
->>>>>>> release-0.0.2
 
 	switch subtype {
 	case "proxy":
 		containers = []docker.Container{
-<<<<<<< HEAD
-			cBootnodes,
-=======
->>>>>>> release-0.0.2
 			cProxy,
 			cNodestate,
 		}
 	case "validator":
 		containers = []docker.Container{
-<<<<<<< HEAD
-			cBootnodes,
-=======
->>>>>>> release-0.0.2
 			cValidator,
 			cNodestate,
 		}
 	case "fullnode":
 		containers = []docker.Container{
-<<<<<<< HEAD
-			cBootnodes,
-			cFullnode,
-			cNodestate,
-		}
-	default:
-		containers = []docker.Container{
-			cBootnodes,
-=======
 			cFullnode,
 			cNodestate,
 		}
@@ -801,7 +605,6 @@ func (c *Celo) GetContainers() []docker.Container {
 		}
 	default:
 		containers = []docker.Container{
->>>>>>> release-0.0.2
 			cProxy,
 		}
 	}
@@ -809,22 +612,6 @@ func (c *Celo) GetContainers() []docker.Container {
 	return containers
 }
 
-<<<<<<< HEAD
-// GetTemplates Returns the templates for current node
-func (c *Celo) GetTemplates() map[string]string {
-	subtype := c.subtype
-	dockerCmd := c.getDockerCmd()
-
-	templates := map[string]string{
-		"celo.dockercmd":        dockerCmd,
-		"configs/collector.env": configs.CollectorEnvTpl,
-	}
-
-	if subtype == "validator" {
-		ks := c.getKeystore()
-		templates["configs/keystore/"+ks.filename] = ks.json // string
-		templates["configs/password.secret"] = ks.pass
-=======
 func (c *Celo) GetNode() node.Node {
 	return c.n
 }
@@ -855,16 +642,11 @@ func (c *Celo) GetTemplates() map[string]string {
 		ks := c.getKeystore()
 		templates["configs/keystore/"+ks.filename] = ks.json // string
 		templates["configs/.password.secret"] = ks.pass
->>>>>>> release-0.0.2
 	}
 
 	return templates
 }
 
-<<<<<<< HEAD
-func (c *Celo) getDockerCmd() string {
-	subtype := c.subtype
-=======
 // InitGenesis Call `geth init /celo/genesis.json` in mounted dir to provision a Celo node.
 func (c *Celo) InitGenesis() (bool, error) {
 
@@ -904,7 +686,6 @@ func (c *Celo) InitGenesis() (bool, error) {
 
 func (c *Celo) getDockerCmd() string {
 	subtype := c.Subtype
->>>>>>> release-0.0.2
 
 	dockerCmd := ``
 	switch subtype {
@@ -914,13 +695,6 @@ func (c *Celo) getDockerCmd() string {
 		dockerCmd = configs.ValidatorCmdTpl
 	case "fullnode":
 		dockerCmd = configs.FullnodeCmdTpl
-<<<<<<< HEAD
-	default:
-		dockerCmd = "help" // docker command required by sdk?
-	}
-
-	return dockerCmd
-=======
 	case "attestation-node":
 		dockerCmd = configs.AttestationCmdTpl
 	case "attestation-service":
@@ -930,7 +704,6 @@ func (c *Celo) getDockerCmd() string {
 	}
 
 	return strings.Replace(dockerCmd, "{{ .Node.StrParameters.networkid }}", c.networkID, -1)
->>>>>>> release-0.0.2
 }
 
 type keystore struct {
@@ -968,8 +741,6 @@ func (c *Celo) getKeystore() keystore {
 
 	return ks
 }
-<<<<<<< HEAD
-=======
 
 func (c *Celo) getDBUrl() {
 	postgres := "bpm-" + c.n.ID + "-attestation-postgres" + ":5432"
@@ -998,4 +769,3 @@ func buildNode() node.Node {
 
 	return n
 }
->>>>>>> release-0.0.2

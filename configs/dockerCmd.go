@@ -15,10 +15,6 @@ SERVICE_HOST=bpm-{{ .Node.ID }}-{{ .Node.StrParameters.subtype }}`
 --rpcvhosts=bpm-{{ .Node.ID }}-{{ .Node.StrParameters.subtype }}
 --etherbase={{ .Node.StrParameters.signer }}
 --bootnodes={{ .Node.StrParameters.bootnodes }}
-<<<<<<< HEAD
-{{ if index .Node.StrParameters.celo }}{{ .Node.StrParameters.celo }}{{ end }}
-=======
->>>>>>> release-0.0.2
 `
 
 	// ValidatorCmdTpl the celo command for running validator
@@ -35,14 +31,8 @@ SERVICE_HOST=bpm-{{ .Node.ID }}-{{ .Node.StrParameters.subtype }}`
 --proxy.proxyenodeurlpair=enode://{{ .Node.StrParameters.enode }}@{{ .Node.StrParameters.proxy_internal }}:30503;enode://{{ .Node.StrParameters.enode }}@{{ .Node.StrParameters.proxy_external }}:30303
 --unlock={{ .Node.StrParameters.signer }}
 --rpcvhosts=bpm-{{ .Node.ID }}-{{ .Node.StrParameters.subtype }}
-<<<<<<< HEAD
---password=/root/.celo/configs/password.secret
---keystore=/root/.celo/configs/keystore
-{{ if index .Node.StrParameters.celo }}{{ .Node.StrParameters.celo }}{{ end }}
-=======
 --password=/root/.celo/configs/.password.secret
 --keystore=/root/.celo/configs/keystore
->>>>>>> release-0.0.2
 `
 
 	// FullnodeCmdTpl the celo command for running fullnode
@@ -58,10 +48,6 @@ SERVICE_HOST=bpm-{{ .Node.ID }}-{{ .Node.StrParameters.subtype }}`
 --rpcvhosts=bpm-{{ .Node.ID }}-{{ .Node.StrParameters.subtype }}
 --etherbase={{ .Node.StrParameters.account }}
 --bootnodes={{ .Node.StrParameters.bootnodes }}
-<<<<<<< HEAD
-{{ if index .Node.StrParameters.celo }}{{ .Node.StrParameters.celo }}{{ end }}
-`
-=======
 {{ if eq .Node.StrParameters.nousb "true" "TRUE" "True" }}--nousb{{ end }}
 `
 
@@ -82,5 +68,4 @@ SERVICE_HOST=bpm-{{ .Node.ID }}-{{ .Node.StrParameters.subtype }}`
 
 	// AttestationServiceCmdTpl the celo command for running attestation service
 	AttestationServiceCmdTpl = ``
->>>>>>> release-0.0.2
 )

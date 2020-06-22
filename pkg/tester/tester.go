@@ -1,25 +1,9 @@
 package tester
 
 import (
-<<<<<<< HEAD
-	"fmt"
-	"log"
-	"os"
-
-	"github.com/Blockdaemon/bpm-sdk/pkg/node"
-)
-
-// CeloTester Interface for running tests against node
-type CeloTester struct{}
-
-// Test Method for calling tests against node
-func (d CeloTester) Test(currentNode node.Node) (bool, error) {
-	if err := runAllTests(); err != nil {
-		return false, err
-	}
-=======
 	"bytes"
 	"context"
+    "errors"
     "strconv"
 	"fmt"
 	"io/ioutil"
@@ -29,6 +13,7 @@ func (d CeloTester) Test(currentNode node.Node) (bool, error) {
     "math/rand"
     "encoding/json"
 
+    // "github.com/davecgh/go-spew/spew"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
 	"github.com/docker/docker/pkg/stdcopy"
@@ -63,41 +48,12 @@ func (d CeloTester) Test(currentNode node.Node) (bool, error) {
     fmt.Printf("Total failed tests: %s\n", strconv.Itoa(results.failed))
     fmt.Printf("Total passed tests: %s\n", strconv.Itoa(results.succeeded))
 
->>>>>>> release-0.0.2
 	return true, nil
 }
 
 type testRunner struct {
 	failed    int
 	succeeded int
-<<<<<<< HEAD
-}
-
-func (t *testRunner) test(testFunc func() error) {
-	if err := testFunc(); err != nil {
-		t.failed++
-	} else {
-		t.succeeded++
-	}
-}
-
-func runAllTests() error {
-
-	jsonfile := os.Args[2]
-
-	n, err := node.Load(jsonfile)
-	if err != nil {
-		log.Fatalf("Unable to load node json: %s\n", err)
-	}
-
-	containerName := "bpm-" + n.ID + "-" + n.StrParameters["subtype"]
-	fmt.Printf("testing container: %s\n", containerName)
-
-	// 1. use sdk docker/BasicManager to get docker client
-	// 2. docker exec container to get `eth.syncing` result.
-
-	return nil
-=======
     bm *docker.BasicManager
     Tests []testRunnerTest
 }
@@ -323,13 +279,23 @@ func getContainerEndpoint(name string) (string, error){
 		return "", err
 	}
 
+    host := ""
+    hostPort := ""
     containerJSON, _ := cli.ContainerInspect(context.Background(), name)
     if err != nil {
 		return "", err
 	}
-    hostPort := containerJSON.NetworkSettings.NetworkSettingsBase.Ports["8545/tcp"][0].HostPort
-    hostIP := containerJSON.NetworkSettings.NetworkSettingsBase.Ports["8545/tcp"][0].HostIP
+    // spew.Dump(containerJSON.NetworkSettings.NetworkSettingsBase, "^ containerJSON.NetworkSettings.NetworkSettingsBase")
+    // spew.Dump(containerJSON.NetworkSettings, "^ containerJSON.NetworkSettings")
+    if len(containerJSON.NetworkSettings.NetworkSettingsBase.Ports["8545/tcp"])==0 {
+        hostPort = "8545"
+        host = name
+    } else if len(containerJSON.NetworkSettings.NetworkSettingsBase.Ports["8545/tcp"]) > 0{
+        hostPort = containerJSON.NetworkSettings.NetworkSettingsBase.Ports["8545/tcp"][0].HostPort
+        host = containerJSON.NetworkSettings.NetworkSettingsBase.Ports["8545/tcp"][0].HostIP
+    } else{
+        return "", errors.New("No rpc port set")
+    }
 
-    return "http://"+hostIP+":"+hostPort, nil
->>>>>>> release-0.0.2
+    return "http://"+host+":"+hostPort, nil
 }
