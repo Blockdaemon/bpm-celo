@@ -10,9 +10,6 @@ check: lint test
 
 .PHONY: test
 test:
-	echo "TESTING tests"
-	echo ${DOCKER_HOST}
-	echo "^ DOCKER_HOST"
 	go test -v ./...
 
 .PHONY: lint
