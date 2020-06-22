@@ -13,7 +13,6 @@ import (
     "math/rand"
     "encoding/json"
 
-    // "github.com/davecgh/go-spew/spew"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
 	"github.com/docker/docker/pkg/stdcopy"
@@ -120,8 +119,12 @@ func runAllTests(currentNode node.Node) (testRunner, error) {
 
     // test rpc, if no error then RPC is working.
     testCase = func()(string, string, error){
-
         title := "JSON RPC"
+
+        if currentNode.StrParameters["subtype"] == "validator" {
+            return title, "false", nil
+        }
+
         rpcEndpoint, err := getContainerEndpoint("/"+containerName)
         if err != nil {
             return title, "false", err
@@ -285,11 +288,10 @@ func getContainerEndpoint(name string) (string, error){
     if err != nil {
 		return "", err
 	}
-    // spew.Dump(containerJSON.NetworkSettings.NetworkSettingsBase, "^ containerJSON.NetworkSettings.NetworkSettingsBase")
-    // spew.Dump(containerJSON.NetworkSettings, "^ containerJSON.NetworkSettings")
+
     if len(containerJSON.NetworkSettings.NetworkSettingsBase.Ports["8545/tcp"])==0 {
         hostPort = "8545"
-        host = name
+        host = strings.Replace(name, "/", "", -1)
     } else if len(containerJSON.NetworkSettings.NetworkSettingsBase.Ports["8545/tcp"]) > 0{
         hostPort = containerJSON.NetworkSettings.NetworkSettingsBase.Ports["8545/tcp"][0].HostPort
         host = containerJSON.NetworkSettings.NetworkSettingsBase.Ports["8545/tcp"][0].HostIP

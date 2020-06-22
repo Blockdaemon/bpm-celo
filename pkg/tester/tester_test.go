@@ -5,7 +5,6 @@ import (
     "context"
     "fmt"
 
-    "github.com/davecgh/go-spew/spew"
     "github.com/docker/docker/api/types"
     "github.com/docker/docker/client"
 )
@@ -25,7 +24,6 @@ func TestGetContainer(t *testing.T){
 
 	if len(containers) > 0 {
 		for _, container := range containers {
-            spew.Dump(container.NetworkSettings.Networks["bpm"].IPAddress, "^ container.NetworkSettings.Networks[\"bpm\"].IPAddress")
             if container.Names[0] == name {
                 // ip := container.NetworkSettings.Networks[0].IpAddress
                 fmt.Printf("Container IP: %s\n", container.ID)
