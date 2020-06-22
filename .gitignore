@@ -2,8 +2,6 @@ bin/*
 .DS_Store
 .env
 /dist
-/build/*
-/build/*/
 !/build/**/attestation-node/node.attestation-node.json
 !/build/**/attestation-service/node.attestation-service.json
 !/build/**/fullnode/node.fullnode.json
