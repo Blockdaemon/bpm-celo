@@ -7,6 +7,7 @@ import (
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
+    "go.blockdaemon.com/bpm/sdk/pkg/node"
 )
 
 func TestGetContainer(t *testing.T) {
