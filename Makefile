@@ -21,6 +21,12 @@ check: test lint
 test:
 	go test -v ./...
 
+.PHONY: test-run-all
+test-run-all:
+	@bash -c 'go build -ldflags "-X main.version=$(VERSION)" -o build/bpm-$(VERSION)-TEST-LOCAL cmd/*'
+	@chmod +x build/bpm-$(VERSION)-TEST-LOCAL
+	./scripts/runTests.sh bpm-$(VERSION)-TEST-LOCAL proxy attestation-node fullnode validator attestation-service
+
 .PHONY: lint
 lint:
 	golangci-lint run --enable gofmt ./...
