@@ -2,9 +2,15 @@ bin/*
 .DS_Store
 .env
 /dist
+/build/*
+!/build/**/attestation-node/monitoring/filebeat.yml
 !/build/**/attestation-node/node.attestation-node.json
+!/build/**/attestation-service/monitoring/filebeat.yml
 !/build/**/attestation-service/node.attestation-service.json
+!/build/**/fullnode/monitoring/filebeat.yml
 !/build/**/fullnode/node.fullnode.json
+!/build/**/validator/monitoring/filebeat.yml
 !/build/**/validator/node.validator.json
+!/build/**/proxy/monitoring/filebeat.yml
 !/build/**/proxy/node.proxy.json
 !/build/**/keystore/*
