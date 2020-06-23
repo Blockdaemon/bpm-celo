@@ -36,8 +36,8 @@ test-release: check
 .PHONY: release
 release: pre-release check
 	# tag it
-	git tag v$(VERSION)
-	git push origin v$(VERSION)
+	# git tag v$(VERSION)
+	# git push origin v$(VERSION)
 
 	# finally run the actually release
 	goreleaser release --rm-dist
