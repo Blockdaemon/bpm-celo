@@ -268,6 +268,9 @@ func (c *Celo) GetParameters() []plugin.Parameter {
 			pNetwork,
 			pSubtype,
 			pNetworkID,
+			pRpcaddr,
+			pRPCPort,
+			pPort,
 			pSigner,
 			pBootnodes,
 			// pCeloCommands,
@@ -427,14 +430,14 @@ func (c *Celo) GetContainers() []docker.Container {
 		Ports: []docker.Port{
 			{
 				HostIP:        "0.0.0.0",
-				HostPort:      "30333",
-				ContainerPort: "30333",
+				HostPort:      n.StrParameters["port"],
+				ContainerPort: "30303",
 				Protocol:      "tcp",
 			},
 			{
 				HostIP:        "0.0.0.0",
-				HostPort:      "30333",
-				ContainerPort: "30333",
+				HostPort:      n.StrParameters["port"],
+				ContainerPort: "30303",
 				Protocol:      "udp",
 			},
 			{
@@ -444,10 +447,9 @@ func (c *Celo) GetContainers() []docker.Container {
 				Protocol:      "tcp",
 			},
 			{
-				HostIP:        "0.0.0.0",
-				HostPort:      "30503",
-				ContainerPort: "30503",
-				Protocol:      "udp",
+				HostIP:        c.n.StrParameters["rpcaddr"],
+				HostPort:      c.n.StrParameters["rpcport"],
+				ContainerPort: "8545",
 			},
 		},
 		CollectLogs: true,

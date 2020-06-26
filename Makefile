@@ -47,4 +47,3 @@ test-run-all:
 	@bash -c 'go build -ldflags "-X main.version=$(VERSION)" -o build/bpm-$(VERSION)-TEST-LOCAL cmd/*'
 	@chmod +x build/bpm-$(VERSION)-TEST-LOCAL
 	./scripts/runTests.sh bpm-$(VERSION)-TEST-LOCAL proxy attestation-node fullnode validator attestation-service
-	# ./scripts/runTests.sh bpm-$(VERSION)-TEST-LOCAL proxy validator

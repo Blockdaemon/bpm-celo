@@ -12,7 +12,10 @@ SERVICE_HOST=bpm-{{ .Node.ID }}-{{ .Node.StrParameters.subtype }}`
 --proxy.proxy
 --proxy.proxiedvalidatoraddress={{ .Node.StrParameters.signer }}
 --proxy.internalendpoint=:30503
+--rpc
 --rpcvhosts=bpm-{{ .Node.ID }}-{{ .Node.StrParameters.subtype }}
+--rpcaddr={{ .Node.StrParameters.rpcaddr }}
+--rpcapi=eth,net,web3,debug,admin,personal
 --etherbase={{ .Node.StrParameters.signer }}
 --bootnodes={{ .Node.StrParameters.bootnodes }}
 `
