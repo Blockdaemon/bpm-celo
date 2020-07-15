@@ -38,15 +38,22 @@ func New() *Celo {
 
 	n := buildNode()
 
-	// get the images
+	// get the images & bootnodes
 	if n.StrParameters["network"] == "baklava" {
 		c.image = "us.gcr.io/celo-testnet/celo-node:baklava"
 		c.imageAttestation = "us.gcr.io/celo-testnet/celo-monorepo:attestation-service-baklava"
-		c.networkID = "40120"
+		c.networkID = "62320"
 	} else if n.StrParameters["network"] == "mainnet" {
 		c.image = "us.gcr.io/celo-testnet/celo-node:rc1"
 		c.imageAttestation = "us.gcr.io/celo-testnet/celo-monorepo:attestation-service-rc1"
 		c.networkID = "42220"
+	}
+
+	// get the default bootnodes
+	if n.StrParameters["network"] == "mainnet" && n.StrParameters["bootnodes"] == "" {
+		n.StrParameters["bootnodes"] = "enode://5c9a3afb564b48cc2fa2e06b76d0c5d8f6910e1930ea7d0930213a0cbc20450434cd442f6483688eff436ad14dc29cb90c9592cc5c1d27ca62f28d4d8475d932@34.82.79.155:30301,enode://2874c2abd970a043e9aae6ef1f07521f747776d38c8bd907b9e0c08d6b19c606e2f46c0539d829bc79e4053a2f53a0348b89ab35cb179748e157ef8c87acf120@34.75.29.120:30303"
+	} else if n.StrParameters["bootnodes"] == "" {
+		n.StrParameters["bootnodes"] = "enode://5aaf10664b12431c250597e980aacd7d5373cae00f128be5b00364344bb96bce7555b50973664bddebd1cb7a6d3fb927bec81527f80e22a26fa373c375fcdefc@35.247.103.141:30301,enode://5aaf10664b12431c250597e980aacd7d5373cae00f128be5b00364344bb96bce7555b50973664bddebd1cb7a6d3fb927bec81527f80e22a26fa373c375fcdefc@35.247.103.141:30301"
 	}
 
 	c.cmdFile = "celo.dockercmd"
@@ -302,7 +309,6 @@ func (c *Celo) GetParameters() []plugin.Parameter {
 			pNetwork,
 			pSubtype,
 			pNetworkID,
-			pPort,
 			pBootnodes,
 			pRpcaddr,
 			pRPCPort,
@@ -392,14 +398,6 @@ func (c *Celo) GetParameters() []plugin.Parameter {
 		}
 	}
 
-	// // explode celo commands into lines
-	// if c.n.StrParameters["celo"] != "" {
-	// 	fmt.Println("regexp triggered")
-	// 	reg := regexp.MustCompile(" ")
-	// 	c.n.StrParameters["celo"] = reg.ReplaceAllString(c.n.StrParameters["celo"], "\n")
-	// }
-	// fmt.Printf("celocmd: %v\n", c.n.StrParameters["celo"])
-
 	return params
 }
 
@@ -474,13 +472,13 @@ func (c *Celo) GetContainers() []docker.Container {
 			{
 				HostIP:        "0.0.0.0",
 				HostPort:      n.StrParameters["port"],
-				ContainerPort: n.StrParameters["port"],
+				ContainerPort: "30303",
 				Protocol:      "tcp",
 			},
 			{
 				HostIP:        "0.0.0.0",
 				HostPort:      n.StrParameters["port"],
-				ContainerPort: n.StrParameters["port"],
+				ContainerPort: "30303",
 				Protocol:      "udp",
 			},
 		},
@@ -529,6 +527,18 @@ func (c *Celo) GetContainers() []docker.Container {
 				HostPort:      n.StrParameters["rpcport"],
 				ContainerPort: "8545",
 				Protocol:      "tcp",
+			},
+			{
+				HostIP:        "0.0.0.0",
+				HostPort:      n.StrParameters["port"],
+				ContainerPort: "30303",
+				Protocol:      "tcp",
+			},
+			{
+				HostIP:        "0.0.0.0",
+				HostPort:      n.StrParameters["port"],
+				ContainerPort: "30303",
+				Protocol:      "udp",
 			},
 		},
 		Mounts: []docker.Mount{
@@ -614,6 +624,7 @@ func (c *Celo) GetContainers() []docker.Container {
 	return containers
 }
 
+// GetNode returns the current node
 func (c *Celo) GetNode() node.Node {
 	return c.n
 }

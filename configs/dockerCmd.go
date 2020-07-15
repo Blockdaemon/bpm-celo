@@ -48,10 +48,12 @@ SERVICE_HOST=bpm-{{ .Node.ID }}-{{ .Node.StrParameters.subtype }}`
 --light.serve={{ .Node.StrParameters.light_serve }}
 --light.maxpeers={{ .Node.StrParameters.light_maxpeers }}
 --maxpeers={{ .Node.StrParameters.maxpeers }}
+--port={{ .Node.StrParameters.port }}
 --rpcvhosts=bpm-{{ .Node.ID }}-{{ .Node.StrParameters.subtype }}
 --etherbase={{ .Node.StrParameters.account }}
 --bootnodes={{ .Node.StrParameters.bootnodes }}
 {{ if eq .Node.StrParameters.nousb "true" "TRUE" "True" }}--nousb{{ end }}
+--verbosity=5
 `
 
 	// AttestationCmdTpl the celo command for running attestation node
@@ -67,6 +69,7 @@ SERVICE_HOST=bpm-{{ .Node.ID }}-{{ .Node.StrParameters.subtype }}`
 --keystore=/root/.celo/configs/keystore
 --password=/root/.celo/configs/.password.secret
 --bootnodes={{ .Node.StrParameters.bootnodes }}
+--bootnodesv4=enode://f65013f1ac6827e275c2d2737ce13357f620d4364124d02227a19321c57f8fbf9214a9411de49d49f180b085b031d9d23211a6ead4499fc5f9d3592b55322123@50.17.60.161:30303
 `
 
 	// AttestationServiceCmdTpl the celo command for running attestation service
