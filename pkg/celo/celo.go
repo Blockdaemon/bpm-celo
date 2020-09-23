@@ -41,11 +41,11 @@ func New() *Celo {
 	// get the images
 	if n.StrParameters["network"] == "baklava" {
 		c.image = "us.gcr.io/celo-testnet/celo-node:baklava"
-		c.imageAttestation = "us.gcr.io/celo-testnet/celo-monorepo:attestation-service-baklava"
-		c.networkID = "40120"
+		c.imageAttestation = "us.gcr.io/celo-testnet/celo-monorepo:attestation-service-1-0-4"
+		c.networkID = "62320"
 	} else if n.StrParameters["network"] == "mainnet" {
-		c.image = "us.gcr.io/celo-testnet/celo-node:rc1"
-		c.imageAttestation = "us.gcr.io/celo-testnet/celo-monorepo:attestation-service-rc1"
+		c.image = "us.gcr.io/celo-org/celo-node:mainnet"
+		c.imageAttestation = "us.gcr.io/celo-testnet/celo-monorepo:attestation-service-1-0-4"
 		c.networkID = "42220"
 	}
 
