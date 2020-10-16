@@ -173,3 +173,27 @@ Then run:
 ```
 go run ./cmd/main.go start node.json
 ```
+
+## Testing
+You can run integration tests on all nodes by running the make task.
+
+First you will have to make sure the `bpm` docker network is created:
+```
+docker network create bpm
+```
+
+Then run:
+```
+make test-run-all
+```
+
+This will:
+ - build a new binary from current code base
+ - create all nodes
+ - link validator with proxy
+ - test all nodes
+
+To test the individual nodes run (replace `$node` with the required node name):
+```
+go run cmd/main.go test build/$node/node.$node.json
+```
