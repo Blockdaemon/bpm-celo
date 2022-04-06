@@ -11,13 +11,13 @@ stages:
   - build
 
 check:
-  image: golangci/golangci-lint:v1.27
+  image: golangci/golangci-lint
   stage: check
   script:
     - make check
 
 build:
-  image: golang:1.14
+  image: golang:1.17
   stage: build
   script:
     - make build
